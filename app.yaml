@@ -1,0 +1,11 @@
+application: northeastholidaymap
+version: 1
+runtime: php
+api_version: 1
+
+handlers:
+- url: /img
+  static_dir: img
+
+- url: /.*
+  script: index.php

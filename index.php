@@ -1,7 +1,9 @@
 <?php
 include_once('mapsKey.php');
+include_once('CloudSQL.php');
 
-$db = new mysqli('localhost', 'root', 'root', 'northeast-holiday');
+//$db = new mysqli('localhost', 'root', 'root', 'northeastholiday');
+$db->select_db('northeastholiday');
 $result = $db->query("SELECT * FROM attractions");
 ?>
 <!DOCTYPE html>
