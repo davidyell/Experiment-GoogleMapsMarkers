@@ -1,8 +1,9 @@
 <?php
 include_once('mapsKey.php');
-include_once('CloudSQL.php');
 
-//$db = new mysqli('localhost', 'root', 'root', 'northeastholiday');
+include_once('CloudSQL.php');
+// $db = new mysqli('localhost', 'root', 'root', 'northeastholiday');
+
 $db->select_db('northeastholiday');
 $result = $db->query("SELECT * FROM attractions");
 ?>
@@ -39,13 +40,14 @@ $result = $db->query("SELECT * FROM attractions");
                 };
 				
                 var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-						
+				
 				<?php
 				for ($i = 0; $i < $result->num_rows; $i++) {
 					$place = $result->fetch_assoc();
+
 					$geoResult = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?address=" . urlencode($place['address']) . "+UK&key=" . $mapsApiKey);
 					$resultObj = (array)json_decode($geoResult);
-					
+
 					switch ($place['type']) {
 						case 'Art Gallery':
 							$image = 'img/art.png';
@@ -76,6 +78,7 @@ $result = $db->query("SELECT * FROM attractions");
 							break;
 					}
 					?>
+
 					var marker = new google.maps.Marker({
 						position: new google.maps.LatLng(
 							<?= $resultObj['results'][0]->geometry->location->lat;?>, 
@@ -85,15 +88,16 @@ $result = $db->query("SELECT * FROM attractions");
 						title: "<?= addslashes($place['name']);?>",
 						icon: "<?= $image;?>"
 					});
-					
+
 					var infowindow = new google.maps.InfoWindow();
-					
+
 					google.maps.event.addListener(marker, 'click', function() {
 						infowindow.setContent("<h2><?= $place['name'];?></h2><ul><li>Cost: <b><?= ((float)$place['price'] > 0)? '&pound;' . $place['price'] : 'Free' ;?></b></li><li>Trip Advisor: <b><?= $place['rating'];?>%</b></li></ul>");
 						infowindow.open(map, this);
 					});
-					
+							
 					<?php
+					sleep(2);
 				}
 				?>
             }
