@@ -45,9 +45,6 @@ $result = $db->query("SELECT * FROM attractions");
 				for ($i = 0; $i < $result->num_rows; $i++) {
 					$place = $result->fetch_assoc();
 
-					$geoResult = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?address=" . urlencode($place['address']) . "+UK&key=" . $mapsApiKey);
-					$resultObj = (array)json_decode($geoResult);
-
 					switch ($place['type']) {
 						case 'Art Gallery':
 							$image = 'img/art.png';
@@ -80,10 +77,7 @@ $result = $db->query("SELECT * FROM attractions");
 					?>
 
 					var marker = new google.maps.Marker({
-						position: new google.maps.LatLng(
-							<?= $resultObj['results'][0]->geometry->location->lat;?>, 
-							<?= $resultObj['results'][0]->geometry->location->lng;?>
-						),
+						position: new google.maps.LatLng(<?= str_replace(' ', '', $place['latlng']);?>),
 						map: map,
 						title: "<?= addslashes($place['name']);?>",
 						icon: "<?= $image;?>"
@@ -97,9 +91,32 @@ $result = $db->query("SELECT * FROM attractions");
 					});
 							
 					<?php
-					sleep(2);
 				}
 				?>
+
+				var marker = new google.maps.Marker({
+					position: new google.maps.LatLng(55.517351,-1.633380),
+					map: map,
+					title: "Caravan",
+					icon: "img/caravan.png"
+				});
+				var circle = new google.maps.Circle({
+					map: map,
+					center: new google.maps.LatLng(55.517351,-1.633380),
+					radius: 8050 // Meters
+				});
+
+				var marker = new google.maps.Marker({
+					position: new google.maps.LatLng(54.969868,-2.253040),
+					map: map,
+					title: "Carvan",
+					icon: "img/caravan.png"
+				});
+				var circle = new google.maps.Circle({
+					map: map,
+					center: new google.maps.LatLng(54.969868,-2.253040),
+					radius: 8050 // Meters
+				});
             }
             google.maps.event.addDomListener(window, 'load', initialize);
 		</script>
